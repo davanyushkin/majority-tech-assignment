@@ -11,7 +11,7 @@ import SwiftUI
 struct CountriesInfoApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            CountiresListView()
         }
     }
 }
