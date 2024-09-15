@@ -1,6 +1,6 @@
 import Foundation
 
-struct Currency: Codable {
+struct Currency: Decodable {
     let name: String
     let symbol: String
 }

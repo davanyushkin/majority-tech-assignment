@@ -1,6 +1,6 @@
 import Foundation
 
-struct Denonym: Codable {
+struct Demonym: Decodable {
     let male: String
     let female: String
     

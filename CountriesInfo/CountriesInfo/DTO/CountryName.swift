@@ -1,7 +1,7 @@
 import Foundation
 
-struct CountryName: Codable {
+struct CountryName: Decodable {
     let common: String
     let official: String
-    let nativeName: [CountryName]
+    @DecodableDefault.EmptyDictionary private(set) var nativeName: [String: CountryName]
 }

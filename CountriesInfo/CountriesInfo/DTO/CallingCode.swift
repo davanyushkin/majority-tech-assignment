@@ -1,6 +1,6 @@
 import Foundation
 
-struct CallingCode: Codable {
-    let root: String
-    let subfixes: [String]
+struct CallingCode: Decodable {
+    let root: String?
+    let subfixes: [String]?
 }

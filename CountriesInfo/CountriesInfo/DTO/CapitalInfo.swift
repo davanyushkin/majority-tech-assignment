@@ -1,5 +1,5 @@
 import Foundation
 
-struct CapitalInfo: Codable {
-    let latlng: [Double]
+struct CapitalInfo: Decodable {
+    let latlng: [Double]?
 }

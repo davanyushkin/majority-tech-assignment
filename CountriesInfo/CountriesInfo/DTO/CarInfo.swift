@@ -1,6 +1,6 @@
 import Foundation
 
-struct CarInfo: Codable {
-    let signs: [String]
+struct CarInfo: Decodable {
+    let signs: [String]?
     let side: String
 }

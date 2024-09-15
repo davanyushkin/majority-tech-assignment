@@ -11,7 +11,14 @@ import SwiftUI
 struct CountriesInfoApp: App {
     var body: some Scene {
         WindowGroup {
-            CountiresListView()
+            CountiresListView(
+                store: Store(
+                    initialState: .init(),
+                    reducer: CountriesListReducer(
+                        countriesService: CountriesListServiceImpl()
+                    )
+                )
+            )
         }
     }
 }

@@ -25,7 +25,7 @@ protocol NetworkClient {
     /// Basic method for requests with normal Codable responses
     /// - Parameters:
     ///   - request: Info about request
-    func fetch<Request: NetworkRequest>(request: Request) async -> Result<Request.ReponseType, ResponseError>
+    func fetch<Request: NetworkRequest>(request: Request) async -> Result<Request.ResponseType, ResponseError>
 }
 
 final class NetworkClientImpl: NetworkClient {
@@ -43,54 +43,20 @@ final class NetworkClientImpl: NetworkClient {
         self.networkLoader = networkLoader
     }
     
-    func fetch<Request: NetworkRequest>(request: Request) async -> Result<Request.ReponseType, ResponseError> {
+    func fetch<Request: NetworkRequest>(request: Request) async -> Result<Request.ResponseType, ResponseError> {
         guard let urlRequest = configureRequest(request: request) else { return .failure(.badURL) }
         let response = await processRequest(request: urlRequest)
         
         switch response {
         case let .success(data):
             do {
-                let result = try JSONDecoder().decode(Request.ReponseType.self, from: data)
+                let result = try JSONDecoder().decode(Request.ResponseType.self, from: data)
                 return .success(result)
             } catch {
                 return .failure(.parsingError(error))
             }
         case let .failure(error):
             return .failure(error)
-        }
-    }
-    
-    private func processRequest(request: URLRequest, callbackQueue: DispatchQueue, completion: @escaping ((Result<Data, ResponseError>) -> Void)) {
-        networkLoader.handleRequest(request) { result in
-            switch result {
-            case let .success(response):
-                if (400...499).contains(response.statusCode) {
-                    callbackQueue.async {
-                        completion(.failure(.badRequest))
-                    }
-                    return
-                }
-                
-                if (500...599).contains(response.statusCode) {
-                    callbackQueue.async {
-                        completion(.failure(.backendError))
-                    }
-                    return
-                }
-                
-                guard let data = response.data else {
-                    callbackQueue.async {
-                        completion(.failure(.unknownError))
-                    }
-                    return
-                }
-
-                completion(.success(data))
-            case let .failure(error):
-                callbackQueue.async {
-                    completion(.failure(.custom(error)))
-                }
-            }
         }
     }
     
@@ -117,12 +83,14 @@ final class NetworkClientImpl: NetworkClient {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
         urlComponents.host = request.host
-        urlComponents.path = request.version + "/" + request.path
+        urlComponents.path = "/" + request.version + "/" + request.path
+        urlComponents.queryItems = request.params.map { key, value in
+            URLQueryItem(name: key, value: "\(value)")
+        }
+        
         guard let url = urlComponents.url else { return nil }
         
-        var request = URLRequest(url: url)
-
-        return request
+        return URLRequest(url: url)
     }
 }
 

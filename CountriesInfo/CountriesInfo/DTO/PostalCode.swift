@@ -1,6 +1,6 @@
 import Foundation
 
-struct PostalCode: Codable {
+struct PostalCode: Decodable {
     let format: String
-    let regex: String
+    let regex: String?
 }

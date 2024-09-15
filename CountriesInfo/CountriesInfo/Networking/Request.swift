@@ -3,11 +3,13 @@ import Foundation
 /// Basic interface for request sending
 protocol NetworkRequest {
     
-    associatedtype ReponseType: Codable
+    associatedtype ResponseType: Decodable
     
     var host: String { get }
     var version: String { get }
     var path: String { get }
+    
+    var params: [String: Any] { get }
 }
 
 extension NetworkRequest {
