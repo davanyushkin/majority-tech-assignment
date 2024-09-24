@@ -1,5 +1,6 @@
 import Foundation
 
+/// Useful wrapper for optional types in Codable parsing. Helps to not create large custom parser
 protocol DecodableDefaultSource {
     associatedtype Value: Decodable
     static var defaultValue: Value { get }

@@ -3,7 +3,7 @@ import Foundation
 enum ResponseError: Error {
     case parsingError(Error)
     case badURL
-    case badRequest
+    case badRequest(Int)
     case backendError
     case unknownError
     case custom(Error)
@@ -30,11 +30,6 @@ protocol NetworkClient {
 
 final class NetworkClientImpl: NetworkClient {
     
-    private let workQueue = DispatchQueue(
-        label: "countires.networking",
-        qos: .userInitiated,
-        attributes: .concurrent
-    )
     private let networkLoader: NetworkLoader
     
     init(
@@ -66,7 +61,7 @@ final class NetworkClientImpl: NetworkClient {
         switch result {
         case let .success(response):
             if (400...499).contains(response.statusCode) {
-                return .failure(.badRequest)
+                return .failure(.badRequest(response.statusCode))
             }
             if (500...599).contains(response.statusCode) {
                 return .failure(.backendError)

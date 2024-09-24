@@ -10,7 +10,6 @@ struct Country: Decodable {
     let ccn3: String?
     let cca3: String
     
-    @DecodableDefault.True private(set) var independent: Bool
     let unMember: Bool
     
     @DecodableDefault.EmptyDictionary private(set) var currencies: [String: Currency]
@@ -24,7 +23,6 @@ struct Country: Decodable {
     
     @DecodableDefault.EmptyDictionary private(set) var languages: [String: String]
     
-    let latlng: [Double]
     let landlocked: Bool
     let area: Double
     
@@ -42,13 +40,4 @@ struct Country: Decodable {
     let continents: [String]
     
     let flags: FlagInfo
-    let coatOfArms: FlagInfo?
-    
-    let startOfWeek: String
-    
-    @DecodableDefault.EmptyArray private(set) var borders: [String]
-    
-    let capitalInfo: CapitalInfo
-    
-    let postalCode: PostalCode?
 }

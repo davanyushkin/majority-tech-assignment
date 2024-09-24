@@ -1,24 +1,25 @@
-//
-//  CountriesInfoApp.swift
-//  CountriesInfo
-//
-//  Created by Dmitrii Vaniushkin on 13.9.24..
-//
-
 import SwiftUI
 
 @main
 struct CountriesInfoApp: App {
     var body: some Scene {
         WindowGroup {
-            CountiresListView(
-                store: Store(
-                    initialState: .init(),
-                    reducer: CountriesListReducer(
-                        countriesService: CountriesListServiceImpl()
+            #if TEST
+            EmptyView()
+            #endif
+            #if !TEST
+            NavigationStack {
+                CountiresListView(
+                    store: Store(
+                        initialState: .init(),
+                        reducer: CountriesListReducer(
+                            countriesService: CountriesListServiceImpl(),
+                            debouncer: Debouncer(duration: .seconds(0.5))
+                        )
                     )
                 )
-            )
+            }
+            #endif
         }
     }
 }
